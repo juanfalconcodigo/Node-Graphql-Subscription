@@ -1,0 +1,109 @@
+type Query {
+  "Retorna un saludo"
+  hello: String!
+  "Retorna la lista de usuarios"
+  users: [User!]!
+  "Login de usuario"
+  login(email: String!, password: String!): ResultToken!
+  "Info de usuario logueado"
+  me: ResultUser!
+  "Retorna lista de publicaciones"
+  publications: [Publication!]!
+}
+
+type Mutation {
+  "Registramos un nuevo usuario"
+  createUser(user: InputUser!): ResultUser!
+  "Eliminamos fisicamente de la base de datos"
+  deleteUser(id: ID!): ResultUser!
+  "Actualizamos el usuario por _id"
+  updateUser(id: ID!, user: InputUser!): ResultUser!
+  "Registrar una publicación"
+  createPublication(publication: InputPublication!): ResultPublication!
+  "Actualizamos la publicación por _id"
+  updatePublication(id: ID!, publication: InputPublication!): ResultPublication!
+  "Eliminamos fisicamente la publicación de la base de datos"
+  deletePublication(id: ID!): ResultPublication!
+  "Registramos un nuevo voto"
+  createVote(idPublication: ID!, idUser: ID!): ResultVote!
+  "Actualizamos el voto"
+  updateVote(idPublication: ID!, idUser: ID!): ResultVote!
+  "Eliminamos el voto"
+  deleteVote(idPublication: ID!, idUser: ID!): ResultVote!
+}
+
+type Subscription {
+  "Lists de publicaciones en tiempo real"
+  changeVotes: [Publication!]!
+}
+
+type ResultVote {
+  status: Boolean!
+  message: String!
+  vote: Vote
+}
+
+type Vote {
+  _id: ID!
+  publication: Publication!
+  user: User!
+}
+
+input InputPublication {
+  description: String!
+  img: String!
+  user: ID!
+}
+
+type ResultPublication {
+  status: Boolean!
+  message: String!
+  publication: Publication
+}
+
+type Publication {
+  _id: ID!
+  description: String!
+  img: String!
+  createAt: String!
+  user: User!
+  votes: Int!
+}
+
+input InputUser {
+  name: String!
+  lastName: String!
+  age: Int!
+  password: String!
+  email: String!
+  role: Roles = USER_ROLE
+}
+
+type ResultUser {
+  status: Boolean!
+  message: String!
+  user: User
+}
+
+type User {
+  _id: ID!
+  name: String!
+  lastName: String!
+  age: Int!
+  password: String!
+  email: String!
+  role: Roles!
+  createAt: String!
+}
+
+type ResultToken {
+  status: Boolean!
+  message: String!
+  user: User
+  token: String
+}
+
+enum Roles {
+  USER_ROLE
+  ADMIN_ROLE
+}
